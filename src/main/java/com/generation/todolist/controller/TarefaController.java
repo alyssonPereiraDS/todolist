@@ -30,4 +30,8 @@ public class TarefaController {
     public ResponseEntity<Tarefa> post(@Valid @RequestBody Tarefa tarefa){
         return ResponseEntity.status(HttpStatus.CREATED).body(tarefaRepository.save(tarefa));
     }
+    @PutMapping
+    public ResponseEntity<Tarefa> put(@Valid @RequestBody Tarefa tarefa){
+        return ResponseEntity.status(HttpStatus.OK).body(tarefaRepository.save(tarefa));
+    }
 }
