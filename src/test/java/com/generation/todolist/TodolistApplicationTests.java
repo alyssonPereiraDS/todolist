@@ -50,7 +50,7 @@ class TodolistApplicationTests {
 		Tarefa tarefaAtualizada= new Tarefa(tarefaCadastrada.getId(), "tarefa 2", "tarefa número 2", "Eduardo", LocalDate.now(), true);
 		HttpEntity<Tarefa> corpoRequisicao = new HttpEntity<>(tarefaAtualizada);
 		ResponseEntity<Tarefa> corpoResposta=testRestTemplate
-				.exchange("/tarefas/atualizar", HttpMethod.PUT, corpoRequisicao, Tarefa.class);
+				.exchange("/tarefas/", HttpMethod.PUT, corpoRequisicao, Tarefa.class);
 		assertEquals(HttpStatus.OK, corpoResposta.getStatusCode());
 
 		assertEquals(corpoRequisicao.getBody().getNome(), corpoResposta.getBody().getNome());
@@ -68,6 +68,16 @@ class TodolistApplicationTests {
 			.exchange("/tarefas", HttpMethod.POST, corpoRequisicao, Tarefa.class);
 		assertEquals(HttpStatus.CREATED, corpoResposta.getStatusCode());
 		assertEquals(corpoRequisicao.getBody().getNome(), corpoResposta.getBody().getNome());
+	}
+
+	@Test
+	@DisplayName("Deletar tarefa")
+	public void deveDeletarUmaTarefa(){
+		Tarefa tarefa = (new Tarefa(0L, "tarefa 4", "tarefa número 4", "Camargo", LocalDate.now(), true));
+		ResponseEntity<Tarefa> resposta= testRestTemplate
+				.exchange("/tarefas/"+tarefa.getId(), HttpMethod.DELETE, null, Tarefa.class);
+		assertEquals(HttpStatus.NO_CONTENT, resposta.getStatusCode());
+		assertEquals(tarefa.getId(), resposta.getBody().getId());
 	}
 
 }
