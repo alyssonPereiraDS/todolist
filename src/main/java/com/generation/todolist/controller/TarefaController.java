@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/tarefas")
@@ -32,6 +34,17 @@ public class TarefaController {
     }
     @PutMapping
     public ResponseEntity<Tarefa> put(@Valid @RequestBody Tarefa tarefa){
-        return ResponseEntity.status(HttpStatus.OK).body(tarefaRepository.save(tarefa));
+        if (tarefaRepository.existsById(tarefa.getId()))
+            return ResponseEntity.status(HttpStatus.OK).body(tarefaRepository.save(tarefa));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id){
+        Optional<Tarefa> produto= tarefaRepository.findById(id);
+        if (produto.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        tarefaRepository.deleteById(id);
     }
 }
