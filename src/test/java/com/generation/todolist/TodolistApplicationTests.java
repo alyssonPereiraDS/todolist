@@ -46,15 +46,26 @@ class TodolistApplicationTests {
 	@Test
 	@DisplayName("Atualizar tarefa")
 	public void deveAtualizarUmaTarefa(){
-		Optional<Tarefa> tarefaCadastrada= tarefaRepository.save();
+		Tarefa tarefaCadastrada= tarefaRepository.save(new Tarefa(0L, "tarefa 2", "tarefa número 2", "Edu", LocalDate.now(), true));
+		Tarefa tarefaAtualizada= new Tarefa(tarefaCadastrada.getId(), "tarefa 2", "tarefa número 2", "Eduardo", LocalDate.now(), true);
+		HttpEntity<Tarefa> corpoRequisicao = new HttpEntity<>(tarefaAtualizada);
+		ResponseEntity<Tarefa> corpoResposta=testRestTemplate
+				.exchange("/tarefas/atualizar", HttpMethod.PUT, corpoRequisicao, Tarefa.class);
+		assertEquals(HttpStatus.OK, corpoResposta.getStatusCode());
+
+		assertEquals(corpoRequisicao.getBody().getNome(), corpoResposta.getBody().getNome());
+
+		assertEquals(corpoRequisicao.getBody().getId(), corpoResposta.getBody().getId());
+
 	}
 
 	@Test
 	@DisplayName("Cadastrar Tarefa")
 	public void deveCadastrarUmaTarefa(){
-		HttpEntity<Tarefa> corpoRequisicao= new ResponseEntity<>(new Tarefa(0L, "tarefa 2", "tarefa número 2", "Moises", LocalDate.now(), true));
+		Tarefa tarefa = (new Tarefa(0L, "tarefa 3", "tarefa número 3", "Moises", LocalDate.now(), true));
+		HttpEntity<Tarefa> corpoRequisicao = new HttpEntity<Tarefa>(tarefa);
 		ResponseEntity<Tarefa> corpoResposta = testRestTemplate
-			.exchange("/tarefas/cadastrar", HttpMethod.POST, corpoRequisicao, Tarefa.class);
+			.exchange("/tarefas", HttpMethod.POST, corpoRequisicao, Tarefa.class);
 		assertEquals(HttpStatus.CREATED, corpoResposta.getStatusCode());
 		assertEquals(corpoRequisicao.getBody().getNome(), corpoResposta.getBody().getNome());
 	}
