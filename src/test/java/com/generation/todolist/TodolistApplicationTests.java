@@ -73,11 +73,11 @@ class TodolistApplicationTests {
 	@Test
 	@DisplayName("Deletar tarefa")
 	public void deveDeletarUmaTarefa(){
-		Tarefa tarefa = (new Tarefa(0L, "tarefa 4", "tarefa número 4", "Camargo", LocalDate.now(), true));
-		ResponseEntity<Tarefa> resposta= testRestTemplate
-				.exchange("/tarefas/"+tarefa.getId(), HttpMethod.DELETE, null, Tarefa.class);
+		Tarefa tarefa = tarefaRepository.save(new Tarefa(0L, "tarefa 4", "tarefa número 4", "Camargo", LocalDate.now(), true));
+		ResponseEntity<String> resposta= testRestTemplate
+				.exchange("/tarefas/"+tarefa.getId(), HttpMethod.DELETE, null, String.class);
 		assertEquals(HttpStatus.NO_CONTENT, resposta.getStatusCode());
-		assertEquals(tarefa.getId(), resposta.getBody().getId());
+
 	}
 
 }
