@@ -42,8 +42,8 @@ public class TarefaController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){
-        Optional<Tarefa> produto= tarefaRepository.findById(id);
-        if (produto.isEmpty())
+        Optional<Tarefa> tarefa= tarefaRepository.findById(id);
+        if (tarefa.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         tarefaRepository.deleteById(id);
     }
